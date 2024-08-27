@@ -1,0 +1,8 @@
+#LaTeX generated files
+*.log
+*.out
+*.aux
+*.pdf
+
+#Python Script Generate tex file
+*.tex
