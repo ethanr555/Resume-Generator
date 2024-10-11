@@ -1,0 +1,45 @@
+{
+  "Bio": {
+    "Name": "",
+    "Email": "",
+    "LinkedIn": "",
+    "Github": "",
+    "Website": ""
+  },
+  "Projects": [
+    {
+      "Name": "",
+      "Date": "",
+      "CompanyName": "",
+      "DescriptionItems": [""]
+    }
+  ],
+  "Career": [
+    {
+      "Title": "",
+      "DescriptionItems": [""],
+      "CompanyName": "",
+      "Date": ""
+    }
+  ],
+  "Education": [
+    {
+      "UniversityName": "",
+      "UniversityLink": "",
+      "Degrees": [
+        {
+          "DegreeTitle": "",
+          "DegreeMajor": "",
+          "Date": ""
+        },
+      ]      
+    }
+  ],
+  "Skills": {
+    "Languages": [""],
+    "Frameworks": [""],
+    "Tools": [""],
+    "Technical": [""],
+    "Platforms": [""]
+  }
+}

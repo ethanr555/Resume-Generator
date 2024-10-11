@@ -58,23 +58,23 @@ def GenerateResumeLatexScript(portfolioJson, maxlineCount: int):
             + "\n\t" + GenerateCommaItem(platforms, "Platforms") + "\n" + "\end{itemize}"
         return ( currentString, 6 )
     
-    def GenerateHeader(name = "", linkedIn = "", linkedInDisplay = "Link", website = "", websiteDisplay = "Link", email = ""):
+    def GenerateHeader(name = "", linkedIn = "", website = "", github = "", email = ""):
         currentString = "\\documentclass{article}" + "\n" + "\\usepackage{hyperref}"\
             + "\n" + "\\usepackage[top=0.5in,left=0.5in,right=0.5in,bottom=0.5in]{geometry}"\
-            + "\n" + "\\hypersetup{colorlinks=true, urlcolor=blue}"\
             + "\n" + "\\pagenumbering{gobble}" + "\n" + "\\begin{document}"\
             \
             +  "\n" + "\\section*{" + name + "}" + "\n" + "\\hrule height 2pt"\
             +  "\n" + "\\vspace{6pt}" + "\n" + "\\scriptsize" + f"\n"\
-            +  "\\href{" + "mailto:" + email + "}{" + email + "} $|$ "\
-            +  "\\href{" + website + "}{" + websiteDisplay + "} $|$ "\
-            +  "\\href{" + linkedIn + "}{" + linkedInDisplay + "}"\
+            +  email + " $|$ "\
+            + website + " $|$ "\
+            + linkedIn + " $|$ "\
+            + github + ""\
             +  "\n" + "\\footnotesize"
         return ( currentString, 5 )
 
     #Pregen
     portfolioBio = portfolioJson["Bio"]
-    headerResult = GenerateHeader(portfolioBio["Name"], portfolioBio["LinkedInLink"], portfolioBio["LinkedInDisplay"], portfolioBio["WebsiteLink"], portfolioBio["WebsiteDisplay"], portfolioBio["Email"])
+    headerResult = GenerateHeader(portfolioBio["Name"], portfolioBio["LinkedIn"], portfolioBio["Website"], portfolioBio["Github"], portfolioBio["Email"])
     careerResults = []
     for career in portfolioJson["Career"]:
         careerResults.append(AddCareerEntry(career["Title"], career["CompanyName"], career["Date"], career["DescriptionItems"]))
