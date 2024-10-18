@@ -2,7 +2,7 @@ import sys
 import json
 import subprocess
 
-def GenerateResumeLatexScript(portfolioJson, maxlineCount: int):
+def GenerateResumeLatexScript(portfolioJson, maxlineCount: int = 50, tags: list = []):
     def AddCareerEntry(title: str, company: str, dateRange: str, items):
         linecount = 1
         currentString = "\\textbf{" + title + ", " + company + "}"\
@@ -72,6 +72,25 @@ def GenerateResumeLatexScript(portfolioJson, maxlineCount: int):
             +  "\n" + "\\footnotesize"
         return ( currentString, 5 )
 
+    def SortByTags(original: list):
+        sortedList = []
+        listBackLog = original.copy()
+        currentList = original.copy()
+        # Disgusting double for loop
+        # For each tag, go through the list and pop entries into sortedList if they have tag.
+        # This will result in items containing first tag being listed first, then ones without first tag but with second tag being added, etc.
+        for tag in tags:
+            for project in currentList:
+                if tag in project["Tags"]:
+                    listBackLog.remove(project)
+                    sortedList.append(project)
+            currentList = listBackLog.copy()
+        #Finally, when all tags are processed, add remaining entries to the back.
+        for project in listBackLog:
+            sortedList.append(project)
+        return sortedList
+
+
     #Pregen
     portfolioBio = portfolioJson["Bio"]
     headerResult = GenerateHeader(portfolioBio["Name"], portfolioBio["LinkedIn"], portfolioBio["Website"], portfolioBio["Github"], portfolioBio["Email"])
@@ -81,8 +100,9 @@ def GenerateResumeLatexScript(portfolioJson, maxlineCount: int):
     eduResults = []
     for edu in portfolioJson["Education"]:
         eduResults.append(AddEducationEntry(edu["UniversityName"], edu["Degrees"]))
+    sortedProjects = SortByTags(portfolioJson["Projects"])
     projectResults = []
-    for project in portfolioJson["Projects"]:
+    for project in sortedProjects:
         projectResults.append(AddProjectEntry(project["Name"], project["Date"], project["DescriptionItems"]))
     portfolioSkills = portfolioJson["Skills"]
     skillsResult = GenerateSkillSection(portfolioSkills["Languages"], portfolioSkills["Frameworks"], portfolioSkills["Tools"], portfolioSkills["Technical"], portfolioSkills["Platforms"])
@@ -136,15 +156,16 @@ def main():
     #Get Portfolio json
     portfolio = {}
     with open(sys.argv[1]) as portfolioFile:
-      portfolio = json.load(portfolioFile)  
-    
+      portfolio = json.load(portfolioFile) 
+    tags = []
+    for tag in sys.argv[2:]:
+        tags.append(tag)
     MAXLINES = 50
-
-    documentString = GenerateResumeLatexScript(portfolio, MAXLINES)
+    print(tags)
+    documentString = GenerateResumeLatexScript(portfolio, MAXLINES, tags)
 
     with open("generated.tex", 'w') as texFile:
         texFile.write(documentString)
-    print(documentString)
 
     subprocess.run(["pdflatex","--jobname=resume","generated.tex"])
 
